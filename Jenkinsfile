@@ -8,12 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/Piyarul7290/MyApp.git'
-            }
-        }
-
         stage('Setup Python Environment') {
             steps {
                 bat 'python -m venv %VENV_DIR%'
@@ -26,6 +20,15 @@ pipeline {
             steps {
                 bat '%PYTHON% HealthCheck01.py'
             }
+        }
+    }
+
+    post {
+        success {
+            bat 'echo CI/CD Pipeline Completed Successfully!'
+        }
+        failure {
+            bat 'echo Pipeline Failed!'
         }
     }
 }
