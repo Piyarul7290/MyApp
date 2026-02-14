@@ -1,24 +1,25 @@
 pipeline {
-  agent any
-  stages {
-    stage('Checkout Code') {
-      steps {
-        git(url: 'https://github.com/Piyarul7290/MyApp', branch: 'main')
-      }
-    }
+    agent any
 
-    stage('Log') {
-      steps {
-        sh '''la -ls
-'''
-      }
-    }
+    stages {
 
-    stage('Build') {
-      steps {
-        sh 'docker build -f curriculum-front/Dockerfile.'
-      }
-    }
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/Piyarul7290/MyApp.git'
+            }
+        }
 
-  }
+        stage('Log') {
+            steps {
+                bat 'echo Pipeline Started'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'python --version'
+                bat 'echo Build Successful'
+            }
+        }
+    }
 }
