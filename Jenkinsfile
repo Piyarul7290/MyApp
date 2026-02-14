@@ -4,6 +4,7 @@ pipeline {
     environment {
         APP_NAME = "MyApp"
         VENV_DIR = "venv"
+        PYTHON = "venv\\Scripts\\python.exe"
     }
 
     stages {
@@ -17,14 +18,14 @@ pipeline {
         stage('Setup Python Environment') {
             steps {
                 bat 'python -m venv %VENV_DIR%'
-                bat '%VENV_DIR%\\Scripts\\activate && pip install --upgrade pip'
-                bat '%VENV_DIR%\\Scripts\\activate && pip install -r requirements.txt'
+                bat '%PYTHON% -m pip install --upgrade pip'
+                bat '%PYTHON% -m pip install -r requirements.txt'
             }
         }
 
         stage('Run Health Check / Test') {
             steps {
-                bat '%VENV_DIR%\\Scripts\\activate && python HealthCheck01.py'
+                bat '%PYTHON% HealthCheck01.py'
             }
         }
 
@@ -32,7 +33,7 @@ pipeline {
             steps {
                 bat '''
                 echo Deploying Application...
-                start cmd /c "%VENV_DIR%\\Scripts\\activate && python HealthCheck01.py"
+                start "" %PYTHON% HealthCheck01.py
                 '''
             }
         }
