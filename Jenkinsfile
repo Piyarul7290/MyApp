@@ -4,9 +4,16 @@ pipeline {
     environment {
         VENV_DIR = "venv"
         PYTHON = "venv\\Scripts\\python.exe"
+        REPO_URL = "https://github.com/Piyarul7290/MyApp.git"
     }
 
     stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: "${REPO_URL}"
+            }
+        }
 
         stage('Setup Python Environment') {
             steps {
@@ -32,3 +39,4 @@ pipeline {
         }
     }
 }
+
