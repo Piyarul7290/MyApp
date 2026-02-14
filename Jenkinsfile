@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        APP_NAME = "MyApp"
+        VENV_DIR = "venv"
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -9,17 +14,36 @@ pipeline {
             }
         }
 
-        stage('Log') {
+        stage('Setup Python Environment') {
             steps {
-                bat 'echo Pipeline Started'
+                bat 'python -m venv %VENV_DIR%'
+                bat '%VENV_DIR%\\Scripts\\activate && pip install --upgrade pip'
+                bat '%VENV_DIR%\\Scripts\\activate && pip install -r requirements.txt'
             }
         }
 
-        stage('Build') {
+        stage('Run Health Check / Test') {
             steps {
-                bat 'python --version'
-                bat 'echo Build Successful'
+                bat '%VENV_DIR%\\Scripts\\activate && python HealthCheck01.py'
             }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                bat '''
+                echo Deploying Application...
+                start cmd /c "%VENV_DIR%\\Scripts\\activate && python HealthCheck01.py"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            bat 'echo CI/CD Pipeline Completed Successfully!'
+        }
+        failure {
+            bat 'echo Pipeline Failed!'
         }
     }
 }
