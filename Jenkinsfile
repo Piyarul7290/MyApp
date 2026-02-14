@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME = "MyApp"
         VENV_DIR = "venv"
         PYTHON = "venv\\Scripts\\python.exe"
     }
@@ -23,28 +22,10 @@ pipeline {
             }
         }
 
-        stage('Run Health Check / Test') {
+        stage('Run Health Check') {
             steps {
                 bat '%PYTHON% HealthCheck01.py'
             }
-        }
-
-        stage('Deploy Application') {
-            steps {
-                bat '''
-                echo Deploying Application...
-                start "" %PYTHON% HealthCheck01.py
-                '''
-            }
-        }
-    }
-
-    post {
-        success {
-            bat 'echo CI/CD Pipeline Completed Successfully!'
-        }
-        failure {
-            bat 'echo Pipeline Failed!'
         }
     }
 }
