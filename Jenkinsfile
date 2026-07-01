@@ -2,20 +2,32 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {                          
+            steps {
+                git branch: 'main', url: 'https://github.com/Piyarul7290/MyApp.git'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m pip install -r requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'python3 test_app.py'
+                sh 'pytest test_app.py'              
+            }
+        }
+
+        stage('Run App') {                           
+            steps {
+                sh 'python3 app.py'
             }
         }
     }
 
-    post {
+    post { 
         success {
             echo '✅ Pipeline completed successfully.'
         }
