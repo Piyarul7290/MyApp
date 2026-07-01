@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {                          
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Piyarul7290/MyApp.git'
             }
@@ -10,17 +10,17 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'pip install -r requirements.txt --break-system-packages'  // ✅ add this flag
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest test_app.py'              
+                sh 'pytest test_app.py'
             }
         }
 
-        stage('Run App') {                           
+        stage('Run App') {
             steps {
                 sh 'python3 app.py'
             }
